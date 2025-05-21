@@ -16,6 +16,7 @@ def main():
     arg_parser.add_argument('-p', '--port')
     arg_parser.add_argument('--copy-data-jobs', type=int, default=1)
     arg_parser.add_argument('--create-index-jobs', type=int, default=2)
+    arg_parser.add_argument('--create-indexes-before-copy-data', action='store_true')
     arg_parser.add_argument('--force', action='store_true')
     arg_parser.add_argument('--cleanup', action='store_true')
     arg_parser.add_argument('--lock-timeout', type=int, default=5)
@@ -25,7 +26,8 @@ def main():
     arg_parser.add_argument('--skip-fk-validation', action='store_true')
     arg_parser.add_argument('--show-queries', action='store_true')
     arg_parser.add_argument('--batch-size', type=int, default=0)
+    arg_parser.add_argument('--time-between-batches', type=float, default=0)
     args = arg_parser.parse_args()
 
     t = TAT(args)
-    asyncio.run(t.run())
+    asyncio.get_event_loop().run_until_complete(t.run())

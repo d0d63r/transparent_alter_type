@@ -43,7 +43,7 @@ class TAT:
         return str(datetime.timedelta(seconds=int(time.time() - start_time)))
 
     def log(self, message):
-        print(f'{self.table_name}: {message}')
+        print(f'{str(datetime.datetime.now())} {self.table_name}: {message}')
 
     @staticmethod
     def log_border():
@@ -481,8 +481,11 @@ class TAT:
             self.check_sub_table()
             await self.create_table_new()
             await self.create_table_delta()
+            if self.args.create_indexes_before_copy_data:
+                await self.create_indexes()
             await self.copy_data()
-            await self.create_indexes()
+            if not self.args.create_indexes_before_copy_data:
+                await self.create_indexes()
             await self.analyze()
             await self.switch_table()
         except Exception as e:

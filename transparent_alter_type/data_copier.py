@@ -1,5 +1,6 @@
 import datetime
 import time
+import asyncio
 
 
 class DataCopier:
@@ -13,7 +14,7 @@ class DataCopier:
         self.last_pk = None
 
     def log(self, message):
-        print(f'{self.table_name}: {message}')
+        print(f'{str(datetime.datetime.now())} {self.table_name}: {message}')
 
     @staticmethod
     def duration(start_time):
@@ -38,6 +39,7 @@ class DataCopier:
     async def copy_data_batches(self):
         last_batch_size = await self.copy_next_batch()
         while last_batch_size == self.args.batch_size:
+            await asyncio.sleep(self.args.time_between_batches)
             last_batch_size = await self.copy_next_batch()
 
     async def copy_next_batch(self):
